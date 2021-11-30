@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1637181707 source:d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_maty\mesh.cpp
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<math.h>
+	"mesh.h"
+
+1637176809 d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_maty\mesh.h
+
+1637173112 source:d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_maty\main.cpp
+	<stdio.h>
+	"mesh.h"
+
