@@ -3,10 +3,10 @@
 
 int main(){
     /*
-        inicializace structury typu mesh, ktera je definovana v hlavickovem
+        inicializace tridy typu Mesh, ktera je definovana v hlavickovem
         souboru mesh.h, a jeji pojmenovani "sit" (muze mit jakykoliv nazev)
     */
-    mesh sit;
+    Mesh sit;
 
 
     /*
@@ -46,24 +46,14 @@ int main(){
             nbTriangles - pocet trojuhelniku
         a podle jejich velikosti alokujeme uvedena pole.
     */
-    Mesh_Load1(&sit, "ctverecnxn.msh");
-
-
-    /*
-        Kdyz uz mame alokovana pole o prislusne velikost, tak pomoci Mesh_Load2 do nich
-        zapiseme ze souboru "ctverec.msh" odpovidajici hodnoty tedy
-            do pole (x,y) zapiseme konkretni souradnice
-            do pole (BndrA, BndrB) zapiseme konkretni indexy uzlu danych hranicnich usecek
-            atd.
-    */
-    Mesh_Load2(&sit, "ctverecnxn.msh");
+    sit.Load("ctverecnxn.msh");
 
 
     /*
         Kdyz uz s uvedenymi poli nepotrebujeme pracovat dealokujeme pamet (v kompletnim
         skriptu bude prikaz uveden az na konci), viz funkce Mesh_Free v mesh.cpp
     */
-    Mesh_Free(&sit);
+    sit.Free();
 
     return 0;
 }
