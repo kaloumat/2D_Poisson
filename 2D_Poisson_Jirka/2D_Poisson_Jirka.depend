@@ -1,0 +1,49 @@
+# depslib dependency file v1.0
+1637192708 source:d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\sparse.cpp
+	<stdlib.h>
+	"sparse.h"
+
+1637189335 source:d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\mesh.cpp
+	<stdlib.h>
+	<stdio.h>
+	"mesh.h"
+
+1637189335 d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\mesh.h
+
+1637192405 source:d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	"mesh.h"
+	"sparse.h"
+
+1637188866 d:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\sparse.h
+
+1637264896 source:e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\mesh.cpp
+	<stdlib.h>
+	<stdio.h>
+	"mesh.h"
+
+1637264105 e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\mesh.h
+
+1637267379 source:e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\sparse.cpp
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	"sparse.h"
+
+1637266090 e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\sparse.h
+
+1637264733 source:e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\vector.cpp
+	<stdlib.h>
+	<stdio.h>
+	"vector.h"
+
+1637264039 e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\vector.h
+
+1637266090 source:e:\dropbox\4. rocnik\programování inženýrských aplikací i\2d_poisson\2d_poisson_jirka\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	"mesh.h"
+	"vector.h"
+	"sparse.h"
+
