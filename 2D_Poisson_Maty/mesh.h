@@ -1,6 +1,7 @@
 #ifndef MESH_H_INCLUDED
 #define MESH_H_INCLUDED
-typedef struct{
+class Mesh{                  // pojmenovani tridy (muze byt jakekoliv)
+public:
     int nbNods;              // pocet uzlu site
     int nbBndrEdges;         // pocet hranicnich usecek site
     int nbTriangles;         // pocet trojuhelniku site
@@ -12,35 +13,44 @@ typedef struct{
     int *TriMark;            // specificka cisla oznacujici dane oblasti (v nasem pripade
                              //     pouze jedna oblast, tedy jedno cislo pro vsechy trojuhelniky)
 
-    int *isDirichlet;        // pole jednicek a nul, odpovida velikosti matice, neboli poctu uzlu 
+    int *isDirichlet;        // pole jednicek a nul, odpovida velikosti matice, neboli poctu uzlu
                              //     kdyz jednicka -> v uzlu je predepsana Dirichletova okr pod
                              //     kdyz nula -> v uzlu neni predepsana zadna okr pod
-} mesh; //pojmenovani struktury (muze byt jakekoliv)
+
+    void Load(const char *fname);
+    void Allocate();
+    void Free();
+    void Read(const char *fname);
+};
 
 // pomocna struktura pro nacitani dat ze souboru .msh
-typedef struct{
+class gmshline{
+public:
     int idx;            // index elementu
     int etyp;           // typ elementu
     int markPhysical;   // specificke cislo
     int ilist[3];       // pole pro tri hodnoty -> odpovida trem vrcholum pro trojuhelnik
                         //      v pripade ctyruhelniku bysme museli zvetsit
-} gmshline;
+
+    int Read(const char *buf);
+};
 
 // definovani velicin, ktere se v celem skriptu nemeni
 #define GMSH_SEGMENT 1  // znamena GMSH_SEGMENT = 1 a odpovida usecce
 #define GMSH_TRIANGLE 2 // znamena GMSH_TRIANGLE = 2 a odpovida trojuhelniku
-#define BUFFER_SIZE 500 // znamena max BUFFER_SIZE = 500, predpokladame, ze radek
-                        //      v .txt souboru bude mit max 500 znaku
+
 /*
     Definice funkci ktere pouzivame v mesh.cpp abysme je tam nemuseli mit napsany poporade
     a nestalo se, ze pri kompilaci nebyla jeste nejaka funkce jakoby definovana, je to taky
     fajn pro prehled, kdyz uz je tech funkci hodne
 
 */
+/*
 void Mesh_Allocate(mesh *p);
 void Mesh_Free(mesh *p);
 void Mesh_Load1(mesh *p, const char *fname);
 int GmshLine_Read(gmshline *p, const char *buf);
 void Mesh_Read(mesh *p, const char *fname);
 void Mesh_Load2(mesh *p, const char *fname);
+*/
 #endif // MESH_H_INCLUDED
