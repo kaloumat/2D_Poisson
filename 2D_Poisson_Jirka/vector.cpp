@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include <iostream>
 #include "vector.h"
+
+using namespace std;
 /* ----------------------------------------------------------------------------------- */
 double *Vector_Allocate(int n){
     // funkce pro alokaci pameti
@@ -23,7 +25,7 @@ void Vector_Save(double *x, int n, char const *fname){
 
     fid = fopen(fname, "w"); // otevreni souboru se jmenem fname (zadavame v main.cpp) v modu w-writing(zapisujeme nove hodnoty)
     if (fid == NULL){ // pro kontrolu, kdyby se nahodou z nejakeho duvodu nepodarilo otevrit soubor
-        printf("Error, nepodarilo se otevrit soubor pro VECTOR\n");
+        cout << "Error, nepodarilo se otevrit soubor pro VECTOR" << endl;
         exit(1);
     }
 
