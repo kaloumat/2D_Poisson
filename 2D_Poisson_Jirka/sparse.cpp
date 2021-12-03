@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include "sparse.h"
+
+using namespace std;
 /* ----------------------------------------------------------------------------------- */
 void Sparse_Allocate(sparse *p, int n, int nalloc){
     // funkce pro alokaci pameti
@@ -53,7 +55,7 @@ void Sparse_GaussSeidel(sparse *A, double *b, double *x, int niter, double err){
             */
             rez = max(rez, fabs(rezi));
         }
-        printf("rez[%d] = %.16lf\n", iter, rez); // tisk rezidia do terminalu pro kazdou iteraci (pro kontrolu)
+        cout << "rez[%d] = %.16lf\n" << iter << rez << endl; // tisk rezidia do terminalu pro kazdou iteraci (pro kontrolu)
         if(rez < err){ // cyklus skonci, kdyz bude rezidium mensi nez minimalni chyba metody (zadavame jako parametr)
             break;
         }
