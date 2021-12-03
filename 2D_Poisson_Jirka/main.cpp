@@ -4,6 +4,8 @@
 #include "vector.h"
 #include "sparse.h"
 
+using namespace std;
+
 void Nacti_fakeMesh(mesh *p, const char *fname);
 void Nacti_fakeSparseMat_a_fakeVekb(mesh *p, sparse *A, double* b, const char *fname);
 
@@ -41,31 +43,31 @@ int main()
         Tisk do terminalu, slouzi pro kontrolu jestli se data z textovych souboru nacetli spravne
     */
     /*-------------------------------------------------------------------------*/
-    printf("souradnice x,y:\n");
+    cout << "souradnice x,y:" << endl;
     for (i = 0; i < sit.nbNods; i++)
-        printf("%lf %lf\n", sit.x[i], sit.y[i]);
+        cout << "%lf %lf\n" << sit.x[i] << sit.y[i] << endl;
 
-    printf("\nhranicni usecky:\n");
+    cout << "hranicni usecky:" << endl;
     for (i = 0; i < sit.nbBndrEdges; i++)
-        printf("%d %d %d\n", sit.BndrA[i], sit.BndrB[i], sit.BndrMark[i]);
+        cout << "%d %d %d\n" << sit.BndrA[i] << sit.BndrB[i] << sit.BndrMark[i] << endl;
 
-    printf("\ntrojuhelniky:\n");
+    cout << "trojuhelniky:" << endl;
     for (i = 0; i < sit.nbTriangles; i++)
-        printf("%d %d %d %d\n", sit.TriA[i], sit.TriB[i], sit.TriC[i], sit.TriMark[i]);
+        cout << "%d %d %d %d\n" << sit.TriA[i] << sit.TriB[i] << sit.TriC[i] << sit.TriMark[i] << endl;
 
-    printf("\nsparse matice:\n");
+    cout << "sparse matice:" << endl;
     for(i = 0; i < A.n; i++){
         for(j = A.PI[i]; j < A.PI[i + 1]; j++){
-            printf("%d %d %lf\n", i, A.J[j], A.VAL[j]);
+            cout << "%d %d %lf\n" << i << A.J[j] << A.VAL[j] << endl;
         }
     }
 
-    printf("\nvektor b:\n");
+    cout << "\nvektor b:" << endl;
     for(i = 0; i < sit.nbNods; i++)
-        printf("%lf\n", b[i]);
+        cout << "%lf\n" << b[i] << endl;
     /*-------------------------------------------------------------------------*/
 
-    printf("\nreziduum GaussSeidel:\n");
+    cout << "\nreziduum GaussSeidel:" << endl;
      /*
         Funkce pro vypocet soustavy lin. rovnic pomoci GaussSeidel
         Jako parametry ji predame sparse matici "A", vektor "b" a nulovy vektor(pole) "u" ktery funkce vyplni
@@ -77,9 +79,9 @@ int main()
     /*
         Vytisk vysledneho vektoru "u" do terminalu
     */
-    printf("\nvysledny vektor u:\n");
+    cout << "\nvysledny vektor u:" << endl;
     for(int i = 0; i < A.n; i++){
-        printf("%lf\n", u[i]);
+        cout << "%lf\n" << u[i] << endl;
     }
 
 
