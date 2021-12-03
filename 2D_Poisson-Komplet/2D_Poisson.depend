@@ -1,0 +1,39 @@
+# depslib dependency file v1.0
+1638538519 source:c:\users\tomáš\desktop\2d_poisson\main.cpp
+	<cmath>
+	<vector>
+	<fstream>
+	<iostream>
+	<iterator>
+	"triplet.h"
+	"mesh.h"
+	"sparse.h"
+
+1638534989 c:\users\tomáš\desktop\2d_poisson\triplet.h
+	<vector>
+
+1638495928 c:\users\tomáš\desktop\2d_poisson\mesh.h
+	<vector>
+
+1638538836 c:\users\tomáš\desktop\2d_poisson\sparse.h
+	<vector>
+	"triplet.h"
+
+1638538605 source:c:\users\tomáš\desktop\2d_poisson\mesh.cpp
+	<iostream>
+	<string.h>
+	<cmath>
+	<vector>
+	"mesh.h"
+
+1638538836 source:c:\users\tomáš\desktop\2d_poisson\sparse.cpp
+	<iostream>
+	<cmath>
+	<algorithm>
+	<vector>
+	"sparse.h"
+
+1638538760 source:c:\users\tomáš\desktop\2d_poisson\triplet.cpp
+	<vector>
+	"triplet.h"
+
