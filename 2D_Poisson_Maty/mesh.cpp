@@ -66,9 +66,9 @@ void Mesh::Load(const char *fname){
         vyrazy "#ifdef DEBUG" a "#endif" nespusti -> nemusime jednotlive zakomentovat.
     */
     printf("pocet uzlu = %d", nbNods ); //COUT MI PISE CHYBU :/
-/*    cout << "pocet uzlu = %d", this->nbNods << endl;
-    cout << "\npocet usecek = %d", nbBndrEdges << endl ;
-    cout << "\npocet trojuhelniku = %d\n", nbTriangles << endl; */
+/*    cout << "pocet uzlu = %d" << this->nbNods << endl;
+    cout << "\npocet usecek = %d" << nbBndrEdges << endl ;
+    cout << "\npocet trojuhelniku = %d\n" << nbTriangles << endl; */
 #endif // DEBUG
 
     // !!!!!DALE JSEM KOPIRUJU CAST Z KODU Z PUVODNI FUNKCE MESH_LOAD2!!!!!
@@ -119,7 +119,7 @@ void Mesh::Load(const char *fname){
                     break;
                 default: // chybova hlaska
                     printf("\n\nError[MSH]:\t Neznamy element %d, type %d!\n", i + 1, current.etyp);
-                    //cout <<"\n\nError[MSH]:\t Neznamy element %d, type %d!\n", i + 1, current.etyp<< endl; //COUT MI PISE CHYBU :/
+                    //cout <<"\n\nError[MSH]:\t Neznamy element %d << type %d!\n" << i + 1 << current.etyp << endl; //COUT MI PISE CHYBU :/
                     exit(1);
                     break;
                 }
@@ -142,19 +142,19 @@ void Mesh::Load(const char *fname){
     */
     cout << "\nsouradnice x,y:\n"<< endl;
     for (i = 0; i < nbNods; i++)
-       // cout <<"%lf %lf\n", x[i], y[i]<< endl ; //COUT MI PISE CHYBU :/
+       // cout <<"%lf %lf\n" << x[i] << y[i] << endl ; //COUT MI PISE CHYBU :/
         printf("%lf %lf\n", x[i], y[i]);
     cout <<"\nhranicni usecky:\n" << endl;
     for (i = 0; i < nbBndrEdges; i++)
-        //cout <<"%d %d %d\n", BndrA[i], BndrB[i], BndrMark[i]<< endl; //COUT MI PISE CHYBU :/
+        //cout <<"%d %d %d\n" << BndrA[i] << BndrB[i] << BndrMark[i] << endl; //COUT MI PISE CHYBU :/
         printf("%d %d %d\n", BndrA[i], BndrB[i], BndrMark[i]);
     cout <<"\nisDirichlet:\n" << endl;
     for(i = 0; i < nbNods; i++)
-       // cout <<"uzel [%d] = %d\n", i, isDirichlet[i]<< endl; //COUT MI PISE CHYBU :/
+       // cout <<"uzel [%d] = %d\n" << i, isDirichlet[i] << endl; //COUT MI PISE CHYBU :/
        printf("uzel [%d] = %d\n", i, isDirichlet[i]);
     cout <<"\ntrojuhelniky:\n" << endl;
     for (i = 0; i < nbTriangles; i++)
-        //cout <<"%d %d %d %d\n", TriA[i], TriB[i], TriC[i], TriMark[i]<< endl; //COUT MI PISE CHYBU :/
+        //cout <<"%d %d %d %d\n" << TriA[i] << TriB[i] << TriC[i] << TriMark[i] << endl; //COUT MI PISE CHYBU :/
         printf("%d %d %d %d\n", TriA[i], TriB[i], TriC[i], TriMark[i]);
 }
 /* ----------------------------------------------------------------------------------- */
@@ -197,7 +197,7 @@ void Mesh::Read(const char *fname){
                     nbTriangles++; // a pocet trojuhelniku se o jeden navysi
                     break;
                 default: //chybova hlaska kdyby etyp se rovnal necemu jinymu nez 1 nebo 2
-                    //cout <<"\n\nError[MSH]:\t Neznamy element %d, type %d!\n", i + 1, current.etyp<< endl; //COUT MI PISE CHYBU :/
+                    //cout <<"\n\nError[MSH]:\t Neznamy element %d << type %d!\n" << i + 1 << current.etyp << endl; //COUT MI PISE CHYBU :/
                     printf("\n\nError[MSH]:\t Neznamy element %d, type %d!\n", i + 1, current.etyp);
                     exit(1);
                     break;
@@ -246,7 +246,7 @@ int gmshline::Read(const char *radek){
         nred = sscanf(radek, "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
         break;
     default: // chybova hlaska
-        //cout << "Error[MSH]:\t Spatny pocet tagu: %d\n", tgs<< endl; //COUT MI PISE CHYBU :/
+        //cout << "Error[MSH]:\t Spatny pocet tagu: %d\n" << tgs<< endl; //COUT MI PISE CHYBU :/
         printf("Error[MSH]:\t Spatny pocet tagu: %d\n", tgs);
         break;
     }
