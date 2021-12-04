@@ -6,9 +6,9 @@
 #include "mesh.h"
 
 /* ----------------------------- Mesh ------------------------------------------------ */
-void Mesh::Load(const char *fname){
+void Mesh::Load(const std::string& filename){
     Mesh grid;
-    grid.Read(fname);
+    grid.Read(filename);
 
     nbNods      = grid.nbNods;
     nbBndrEdges = grid.nbBndrEdges;
@@ -39,7 +39,7 @@ void Mesh::Load(const char *fname){
     char     radek[500];
     gmshline current;
 
-    fid = fopen(fname, "r");
+    fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
         printf("Error, nepodarilo se otevrit soubor ve formatu .MSH");
         exit(1);
@@ -67,7 +67,7 @@ void Mesh::Load(const char *fname){
                     BndrB[i1]    = current.ilist[1];
                     BndrMark[i1] = current.markPhysical;
                     if(current.markPhysical == 111)
-                        isDirichlet[BndrA[i1]] = 1;
+                        isDirichlet[BndrA[i1]] = true;
                     i1++;
                     break;
                 case GMSH_TRIANGLE:
@@ -89,7 +89,7 @@ void Mesh::Load(const char *fname){
     fclose(fid);
 }
 /* ----------------------------------------------------------------------------------- */
-void Mesh::Read(const char *fname){
+void Mesh::Read(const std::string& filename){
     int      i, nbGeomElements;
     FILE     *fid;
     char     radek[500];
@@ -99,7 +99,7 @@ void Mesh::Read(const char *fname){
     nbBndrEdges = 0;
     nbTriangles = 0;
 
-    fid = fopen(fname, "r");
+    fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
         printf("Error, nepodarilo se otevrit soubor ve formatu .MSH");
         exit(1);
@@ -145,13 +145,13 @@ void element::GetElement(int i, Mesh *ptr){
     idxBaseFn[1] = idxB + 1;
     idxBaseFn[2] = idxC + 1;
 
-    if(ptr->isDirichlet[idxA] == 1)
+    if(ptr->isDirichlet[idxA] == true)
         idxBaseFn[0] = - idxBaseFn[0];
 
-    if(ptr->isDirichlet[idxB] == 1)
+    if(ptr->isDirichlet[idxB] == true)
         idxBaseFn[1] = - idxBaseFn[1];
 
-    if(ptr->isDirichlet[idxC] == 1)
+    if(ptr->isDirichlet[idxC] == true)
         idxBaseFn[2] = - idxBaseFn[2];
 
     A[0] = ptr->x[idxA];     A[1] = ptr->y[idxA];
@@ -231,13 +231,13 @@ quadrature::quadrature(){
 
 
 /* ----------------------------- gmshline -------------------------------------------- */
-int gmshline::Read(const char *radek){
+int gmshline::Read(const std::string& radek){
     int idx, etp, tgs, tgs1; //index //typ elementu //pocet oznaceni v gmsh
     int val;
     int tags[10], pom[10];
     int nred;
 
-    nred = sscanf(radek, "%d %d %d", &idx, &etp, &tgs);
+    nred = sscanf(radek.c_str(), "%d %d %d", &idx, &etp, &tgs);
     if (nred != 3){
         printf("Error[MSH]:\t GMSH format je spatne, nebo spatny radek\n");
         exit(1);
@@ -249,17 +249,11 @@ int gmshline::Read(const char *radek){
     val  = tgs + etp * 10;
     nred = 0;
     switch (val){
-    case 11:
-        nred = sscanf(radek, "%d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &pom[0], &pom[1]);
-        break;
     case 12:
-        nred = sscanf(radek, "%d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1]);
-        break;
-    case 21:
-        nred = sscanf(radek, "%d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &pom[0], &pom[1], &pom[2]);
+        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1]);
         break;
     case 22:
-        nred = sscanf(radek, "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
+        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
         break;
     default:
         printf("Error[MSH]:\t Incorrect number of tags (NTAGS %d)\n", tgs);

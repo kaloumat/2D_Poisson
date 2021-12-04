@@ -21,11 +21,10 @@ public:
     std::vector<double> x, y;                               // x, y souradnice
     std::vector<int>    BndrA, BndrB, BndrMark;             // indexy uzlu hranicnich usecek a jejich "physical" marker z gmsh
     std::vector<int>    TriA, TriB, TriC, TriMark;          // indexy uzlu trojuhelniku a jejich "physical" marker z gmsh
-    std::vector<int>    isDirichlet;
+    std::vector<bool>   isDirichlet;                        // jestli je v uzlu predepsan Dirichlet
 
-    void Load(const char *fname);
-    void Read(const char *fname);
-    void SaveVTK(std::vector<double>& u, const char *fname);
+    void Load(const std::string& filename);
+    void Read(const std::string& filename);
 };
 
 class element{
@@ -76,12 +75,12 @@ public:
 
 class gmshline{
 public:
-    int idx;                        // index elementu
-    int etyp;                       // typ elementu
-    int markPhysical;               // oznaceni "physical" z gmsh
-    int ilist[3];                   // pomocne pole pro uzly elementu
+    int idx;                            // index elementu
+    int etyp;                           // typ elementu
+    int markPhysical;                   // oznaceni "physical" z gmsh
+    int ilist[3];                       // pomocne pole pro uzly elementu
 
-    int Read(const char *radek);
+    int Read(const std::string& radek);
 };
 
 #endif // MESH_H_INCLUDED

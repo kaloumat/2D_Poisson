@@ -19,7 +19,7 @@ double Dirichlet(double x, double y){
 }
 
 int main(){
-    int i, j, k;
+    int i, k;
     double x, y;
 
     Mesh sit;
@@ -52,7 +52,7 @@ int main(){
     }
 
     for(i = 0; i < sit.nbBndrEdges; i++){
-        if(sit.isDirichlet[sit.BndrA[i]] == 1){
+        if(sit.isDirichlet[sit.BndrA[i]] == true){
             b[sit.BndrA[i]] = Dirichlet(sit.x[sit.BndrA[i]], sit.y[sit.BndrA[i]]);
             tri.Add(sit.BndrA[i] + 1, sit.BndrA[i] + 1, 1);
         }
@@ -89,14 +89,17 @@ int main(){
 
     printf("\nregularni matice tuhosti A:\n");
     for(i = 0; i < A.n; i++){
-        for(j = A.PI[i]; j < A.PI[i + 1]; j++){
+        for(int j = A.PI[i]; j < A.PI[i + 1]; j++){
             printf("%d %d %lf\n", i, A.J[j], A.VAL[j]);
         }
     }
 
     printf("\nreziduum GaussSeidel:\n");
+#endif // DEBUG
+
     A.GaussSeidel(b, u, 1000, 1e-10);
 
+#ifdef DEBUG
     printf("\nvysledny vektor u:\n");
     for(int i = 0; i < A.n; i++){
         printf("%lf\n", u[i]);

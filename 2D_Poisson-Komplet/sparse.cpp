@@ -1,3 +1,4 @@
+#define DEBUG
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -39,7 +40,11 @@ void Sparse::GaussSeidel(std::vector<double>& b, std::vector<double>& x, int nit
             x[i] += rezi / aii;
             rez = std::max(rez, fabs(rezi));
         }
+
+#ifdef DEBUG
         printf("rez[%d] = %e\n", iter, rez);
+#endif // DEBUG
+
         if(rez < err){
             break;
         }
