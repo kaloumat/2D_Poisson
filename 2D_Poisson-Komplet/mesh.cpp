@@ -28,9 +28,9 @@ void Mesh::Load(const std::string& filename){
     isDirichlet.resize(nbNods);
 
 #ifdef DEBUG
-    printf("pocet uzlu = %d\n", nbNods);
-    printf("pocet usecek = %d\n", nbBndrEdges);
-    printf("pocet trojuhelniku = %d\n\n", nbTriangles);
+    std::cout << "pocet uzlu = " << nbNods << std::endl;
+    std::cout << "pocet usecek = " << nbBndrEdges << std::endl;
+    std::cout << "pocet trojuhelniku = " << nbTriangles << std::endl;
 #endif // DEBUG
 
     int      i, nbGeomElements, idx;
@@ -41,7 +41,7 @@ void Mesh::Load(const std::string& filename){
 
     fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
-        printf("Error, nepodarilo se otevrit soubor ve formatu .MSH");
+        std::cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << std::endl;
         exit(1);
     }
     while (!feof(fid)){
@@ -101,7 +101,7 @@ void Mesh::Read(const std::string& filename){
 
     fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
-        printf("Error, nepodarilo se otevrit soubor ve formatu .MSH");
+        std::cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << std::endl;
         exit(1);
     }
     while (!feof(fid)){
@@ -178,21 +178,21 @@ void element::GetElement(int i, Mesh *ptr){
 /* ----------------------------------------------------------------------------------- */
 void element::Info(int i, Mesh *ptr){
     GetElement(i, ptr);
-    printf("\ntrojuhelnik:\n");
-    printf("typ elementu: %d\n", typ);
-    printf("index elementu: %d\n", idx);
-    printf("oznaceni: %d\n", mark);
-    printf("indexy uzlu: A = %d, B = %d, C = %d\n", idxA, idxB, idxC);
-    printf("indexy uzlu v ramci Dirichleta: A = %d, B = %d, C = %d\n", idxBaseFn[0], idxBaseFn[1], idxBaseFn[2]);
-    printf("souradnice vrcholu: A[%lf, %lf], B[%lf, %lf] C[%lf, %lf]\n", A[0], A[1], B[0], B[1], C[0], C[1]);
-    printf("souradnice stredu: Sa[%lf, %lf], Sb[%lf, %lf] Sc[%lf, %lf]\n", Sa[0], Sa[1], Sb[0], Sb[1], Sc[0], Sc[1]);
-    printf("souradnice teziste: T[%lf, %lf]\n", T[0], T[1]);
-    printf("transformacni matice: [%lf   %lf]\n", matB[0][0], matB[0][1]);
-    printf("transformacni matice: [%lf   %lf]\n", matB[1][0], matB[1][1]);
-    printf("inverzni matice: [%lf   %lf]\n", invB[0][0], invB[0][1]);
-    printf("inverzni matice: [%lf   %lf]\n", invB[1][0], invB[1][1]);
-    printf("determinant matice: %lf\n", detB);
-    printf("obsah elementu: %lf\n", vol);
+    std::cout << std::endl << "trojuhelnik:" << std::endl;
+    std::cout << "typ elementu: " << typ << std::endl;
+    std::cout << "index elementu: " << idx << std::endl;
+    std::cout << "oznaceni: " << mark << std::endl;
+    std::cout << "indexy uzlu: " << "A = " << idxA << ", B = " << idxB << ", C = " << idxC << std::endl;
+    std::cout << "indexy uzlu v ramci Dirichleta: " << "A = " << idxBaseFn[0] << ", B = " << idxBaseFn[1] << ", C = " << idxBaseFn[2] << std::endl;
+    std::cout << "souradnice vrcholu: " << "A[" << A[0] << ", " << A[1] << "], B[" << B[0] << ", " << B[1] << "], C[" << C[0] << ", " << C[1] << "]" << std::endl;
+    std::cout << "souradnice stredu: " << "Sa[" << Sa[0] << ", " << Sa[1] << "], Sb[" << Sb[0] << ", " << Sb[1] << "], Sc[" << Sc[0] << ", " << Sc[1] << "]" << std::endl;
+    std::cout << "souradnice teziste: " << "T[" << T[0] << ", " << T[1] << "]" << std::endl;
+    std::cout << "transformacni matice: " << "[" << matB[0][0] << " " << matB[0][1] << "]" << std::endl;
+    std::cout << "transformacni matice: " << "[" << matB[1][0] << " " << matB[1][1] << "]" << std::endl;
+    std::cout << "inverzni matice: " << "[" << invB[0][0] << " " << invB[0][1] << "]" << std::endl;
+    std::cout << "inverzni matice: " << "[" << invB[1][0] << " " << invB[1][1] << "]" << std::endl;
+    std::cout << "determinant matice: " << detB << std::endl;
+    std::cout << "obsah elementu: " << vol << std::endl;
 }
 
 
