@@ -80,29 +80,30 @@ int main(){
     A.Create(&tri);
 
 #ifdef DEBUG
-    printf("vektor zatizeni b:\n");
+    cout << endl << "vektor zatizeni b: " << endl;
     for(i = 0; i < sit.nbNods; i++)
-        printf("b[%d] = %lf\n", i, b[i]);
+        cout << "b[" << i << "] = " << b[i] << endl;
 
-    printf("\nA.n = %d\n", A.n);
-    printf("A.nz = %d\n", A.nz);
+    cout << endl <<"A.n = " << A.n << endl;
+    cout << "A.nz = " << A.nz << endl;
 
-    printf("\nregularni matice tuhosti A:\n");
+    cout << endl << "regularni matice tuhosti A:" << endl;
     for(i = 0; i < A.n; i++){
         for(int j = A.PI[i]; j < A.PI[i + 1]; j++){
-            printf("%d %d %lf\n", i, A.J[j], A.VAL[j]);
+            cout << i << " " << A.J[j] << " " << A.VAL[j] << endl;
         }
     }
 
-    printf("\nreziduum GaussSeidel:\n");
+    cout << endl << "reziduum GaussSeidel:" << endl;
 #endif // DEBUG
 
     A.GaussSeidel(b, u, 1000, 1e-10);
 
 #ifdef DEBUG
-    printf("\nvysledny vektor u:\n");
+    cout << endl << "vysledny vektor u:" << endl;
     for(int i = 0; i < A.n; i++){
-        printf("%lf\n", u[i]);
+        cout << fixed;
+        cout << u[i] << endl;
     }
 #endif // DEBUG
 
