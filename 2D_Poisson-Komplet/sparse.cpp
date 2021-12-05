@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include<iomanip>
 #include "sparse.h"
 /* ----------------------------------------------------------------------------------- */
 void Sparse::Create(Triplet *ptr){
@@ -42,7 +43,9 @@ void Sparse::GaussSeidel(std::vector<double>& b, std::vector<double>& x, int nit
         }
 
 #ifdef DEBUG
-        printf("rez[%d] = %e\n", iter, rez);
+        std::cout << std::setprecision(4);
+        std::cout << std::scientific;
+        std::cout << "rez[" << iter << "] = " << rez << std::endl;
 #endif // DEBUG
 
         if(rez < err){
