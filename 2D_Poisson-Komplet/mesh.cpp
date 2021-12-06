@@ -78,7 +78,7 @@ void Mesh::Load(const std::string& filename){
                     i2++;
                     break;
                 default:
-                    printf("\n\nError[MSH]:\t Unknown element %d, type %d!\n", i + 1, current.etyp);
+                    std::cout << std::endl << std::endl << "Error[MSH]: Unknown element " << i + 1  << ", type " << current.etyp << std::endl;
                     exit(1);
                     break;
                 }
@@ -120,7 +120,7 @@ void Mesh::Read(const std::string& filename){
                 case GMSH_SEGMENT:     nbBndrEdges++; break;
                 case GMSH_TRIANGLE:    nbTriangles++; break;
                 default:
-                    printf("\n\nError[MSH]:\t Neznamy element %d, type %d!\n", i + 1, current.etyp);
+                    std::cout << std::endl << std::endl << "Error[MSH]: Neznamy element " << i + 1 << ", type " << current.etyp << "!" << std::endl;
                     exit(1);
                     break;
                 }
@@ -239,7 +239,7 @@ int gmshline::Read(const std::string& radek){
 
     nred = sscanf(radek.c_str(), "%d %d %d", &idx, &etp, &tgs);
     if (nred != 3){
-        printf("Error[MSH]:\t GMSH format je spatne, nebo spatny radek\n");
+        std::cout << "Error[MSH]: GMSH format je spatne, nebo spatny radek" << std::endl;
         exit(1);
     }
     etyp = etp;
@@ -256,7 +256,7 @@ int gmshline::Read(const std::string& radek){
         nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
         break;
     default:
-        printf("Error[MSH]:\t Incorrect number of tags (NTAGS %d)\n", tgs);
+        std::cout << "Error[MSH]: Incorrect number of tags (NTAGS " << tgs << ")" << std::endl;
         break;
     }
 
@@ -264,13 +264,13 @@ int gmshline::Read(const std::string& radek){
     switch (etp){
     case GMSH_SEGMENT:
         if (nred != tgs + 3 + 2)
-            printf("Error[MSH]:\t Spatny format site pro usecky\n");
+            std::cout << "Error[MSH]: Spatny format site pro usecky" << std::endl;
         ilist[0] = pom[0] - 1;
         ilist[1] = pom[1] - 1;
         break;
     case GMSH_TRIANGLE:
         if (nred != tgs + 3 + 3)
-            printf("Error[MSH]:\t Spatny format site pro trojuhelniky\n");
+            std::cout << "Error[MSH]: Spatny format site pro trojuhelniky" << std::endl;
         ilist[0] = pom[0] - 1;
         ilist[1] = pom[1] - 1;
         ilist[2] = pom[2] - 1;
