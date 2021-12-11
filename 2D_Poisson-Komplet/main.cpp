@@ -109,7 +109,6 @@ int main(){
 #endif // DEBUG
 
     sit.VectorData(u);
-
     sit.VectorSave(u, "poisson2D.txt");
 
     return 0;

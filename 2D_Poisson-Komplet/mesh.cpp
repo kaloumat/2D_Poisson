@@ -5,7 +5,7 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
-#include <string.h>  // vymenit
+#include <sstream>
 #include "mesh.h"
 
 using namespace std;
@@ -19,17 +19,6 @@ void Mesh::Load(const string& filename){
     nbBndrEdges = grid.nbBndrEdges;
     nbTriangles = grid.nbTriangles;
 
-    double xcoord, ycoord;
-
-    BndrA.resize(nbBndrEdges);
-    BndrB.resize(nbBndrEdges);
-    BndrMark.resize(nbBndrEdges);
-
-    TriA.resize(nbTriangles);
-    TriB.resize(nbTriangles);
-    TriC.resize(nbTriangles);
-    TriMark.resize(nbTriangles);
-
     isDirichlet.resize(nbNods);
 
 #ifdef DEBUG
@@ -38,49 +27,50 @@ void Mesh::Load(const string& filename){
     cout << "pocet trojuhelniku = " << nbTriangles << endl;
 #endif // DEBUG
 
-    int      i, nbGeomElements, idx;
-    int      i1, i2; i1 = i2 = 0;
-    FILE     *fid;
-    char     radek[500];
+    int      i, nbGeomElements, idx, ii = 0;
+    char     buff[100];
+    double   xcoord, ycoord;
+    string   radek;
+
     gmshline current;
 
-    fid = fopen(filename.c_str(), "r");
-    if (fid == NULL){
+    ifstream vstup(filename);
+    if(!vstup.is_open()){
         cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << endl;
         exit(1);
     }
-    while (!feof(fid)){
-        fgets(radek, sizeof(radek), fid);
-        if (memcmp(radek, "$Nodes", 6) == 0){
-            fgets(radek, sizeof(radek), fid); // dalsi radek
+    while (getline(vstup, radek)){
+        if (radek == "$Nodes"){
+            vstup.getline(buff, sizeof(buff));
             for (i = 0; i < nbNods; i++){
-                fgets(radek, sizeof(radek), fid);
-                sscanf(radek, "%d %lf %lf", &idx, &xcoord, &ycoord);
+                getline(vstup, radek);
+                istringstream ss(radek);
+                ss >> idx >> xcoord >> ycoord;
                 x.push_back(xcoord);
                 y.push_back(ycoord);
             }
         }
-        if (memcmp(radek, "$Elements", 9) == 0){
-            fgets(radek, sizeof(radek), fid); // dalsi radek
-            sscanf(radek, "%d", &nbGeomElements);
+        if (radek == "$Elements"){
+            getline(vstup, radek);
+            istringstream ss(radek);
+            ss >> nbGeomElements;
             for(i = 0; i < nbGeomElements; i++){
-                fgets(radek, sizeof(radek), fid);
+                getline(vstup, radek);
                 current.Read(radek);
                 switch (current.etyp){
                 case GMSH_SEGMENT:
-                    BndrA[i1]    = current.ilist[0];
-                    BndrB[i1]    = current.ilist[1];
-                    BndrMark[i1] = current.markPhysical;
+                    BndrA.push_back(current.ilist[0]);
+                    BndrB.push_back(current.ilist[1]);
+                    BndrMark.push_back(current.markPhysical);
                     if(current.markPhysical == 111)
-                        isDirichlet[BndrA[i1]] = true;
-                    i1++;
+                        isDirichlet[BndrA[ii]] = true;
+                    ii++;
                     break;
                 case GMSH_TRIANGLE:
-                    TriA[i2]    = current.ilist[0];
-                    TriB[i2]    = current.ilist[1];
-                    TriC[i2]    = current.ilist[2];
-                    TriMark[i2] = current.markPhysical;
-                    i2++;
+                    TriA.push_back(current.ilist[0]);
+                    TriB.push_back(current.ilist[1]);
+                    TriC.push_back(current.ilist[2]);
+                    TriMark.push_back(current.markPhysical);
                     break;
                 default:
                     cout << "\nError[Mesh]: Neznamy element " << i + 1 << ", typ " << current.etyp << endl;
@@ -90,36 +80,36 @@ void Mesh::Load(const string& filename){
             }
         }
     }
-
-    fclose(fid);
+    vstup.close();
 }
 /* ----------------------------------------------------------------------------------- */
 void Mesh::Read(const string& filename){
     int      i, nbGeomElements;
-    FILE     *fid;
-    char     radek[500];
+    string   radek;
+
     gmshline current;
 
-    nbNods = 0;
+    nbNods      = 0;
     nbBndrEdges = 0;
     nbTriangles = 0;
 
-    fid = fopen(filename.c_str(), "r");
-    if (fid == NULL){
+    ifstream vstup(filename);
+    if(!vstup.is_open()){
         cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << endl;
         exit(1);
     }
-    while (!feof(fid)){
-        fgets(radek, sizeof(radek), fid);
-        if (memcmp(radek, "$Nodes", 6) == 0){
-            fgets(radek, sizeof(radek), fid); //dalsi radek
-            sscanf(radek, "%d", &nbNods);
+    while (getline(vstup, radek)){
+        if (radek == "$Nodes"){
+            getline(vstup, radek);
+            istringstream ss(radek);
+            ss >> nbNods;
         }
-        if (memcmp(radek, "$Elements", 9) == 0){
-            fgets(radek, sizeof(radek), fid); //dalsi radek
-            sscanf(radek, "%d", &nbGeomElements);
+        if (radek == "$Elements"){
+            getline(vstup, radek);
+            istringstream ss(radek);
+            ss >> nbGeomElements;
             for(i = 0; i < nbGeomElements; i++){
-                fgets(radek, sizeof(radek), fid);
+                getline(vstup, radek);
                 current.Read(radek);
                 switch (current.etyp){
                 case GMSH_SEGMENT:
@@ -136,7 +126,7 @@ void Mesh::Read(const string& filename){
             }
         }
     }
-    fclose(fid);
+    vstup.close();
 }
 /* ----------------------------------------------------------------------------------- */
 void Mesh::VectorSave(vector<double>& u, const string& filename){
@@ -295,28 +285,30 @@ quadrature::quadrature(){
 
 /* ----------------------------- gmshline -------------------------------------------- */
 int gmshline::Read(const string& radek){
-    int idx, etp, tgs, tgs1; //index //typ elementu //pocet oznaceni v gmsh
-    int val;
-    int tags[10], pom[10];
+    int idx, etyp, tgs;    // index // typ elementu // pocet oznaceni v gmsh
+    int val;               // ridici cislo pro rozliseni elementu
+    int tags[2], pom[3];
     int nred;
 
-    nred = sscanf(radek.c_str(), "%d %d %d", &idx, &etp, &tgs);
+    nred = sscanf(radek.c_str(), "%d %d %d", &idx, &etyp, &tgs);
     if (nred != 3){
         cout << "Error[Mesh]: GMSH format je spatne, nebo spatny radek" << endl;
         exit(1);
     }
-    etyp = etp;
-    this->idx  = idx;
-    tags[0] = tags[1] = tags[2] = tags[3] = tags[4] = tags[5] = pom[0] = pom[1] = pom[2] = pom[3] = pom[4] = 0;
 
-    val  = tgs + etp * 10;
-    nred = 0;
+    this->idx  = idx;
+    this->etyp = etyp;
+
+    tags[0] = tags[1] = pom[0] = pom[1] = pom[2] = 0;
+    val     = tgs + etyp * 10;
+    nred    = 0;
+
     switch (val){
     case 12:
-        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1]);
+        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d", &idx, &etyp, &tgs, &tags[0], &tags[1], &pom[0], &pom[1]);
         break;
     case 22:
-        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
+        nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d %d", &idx, &etyp, &tgs, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
         break;
     default:
         cout << "Error[Mesh]: Spatny pocet tagu: " << tgs << endl;
@@ -324,7 +316,8 @@ int gmshline::Read(const string& radek){
     }
 
     markPhysical = tags[0];
-    switch (etp){
+
+    switch (etyp){
     case GMSH_SEGMENT:
         if (nred != tgs + 3 + 2)
             cout << "Error[Mesh]: Spatny format site pro usecky" << endl;
