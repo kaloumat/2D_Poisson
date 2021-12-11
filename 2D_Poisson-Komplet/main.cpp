@@ -3,7 +3,6 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <iterator>
 #include "triplet.h"
 #include "mesh.h"
 #include "sparse.h"
@@ -52,10 +51,13 @@ int main(){
     }
 
     for(i = 0; i < sit.nbBndrEdges; i++){
-        if(sit.isDirichlet[sit.BndrA[i]] == true){
+        if(sit.isDirichlet[sit.BndrA[i]] == true)
             b[sit.BndrA[i]] = Dirichlet(sit.x[sit.BndrA[i]], sit.y[sit.BndrA[i]]);
-            tri.Add(sit.BndrA[i] + 1, sit.BndrA[i] + 1, 1);
-        }
+    }
+
+    for(i = 0; i < sit.nbNods; i++){
+        if(sit.isDirichlet[i] == true)
+            tri.Add(i + 1, i + 1, 1);
     }
 
     gradfi grad;
@@ -80,36 +82,35 @@ int main(){
     A.Create(&tri);
 
 #ifdef DEBUG
-    cout << endl << "vektor zatizeni b: " << endl;
+    cout << "\nvektor b:" << endl;
     for(i = 0; i < sit.nbNods; i++)
-        cout << "b[" << i << "] = " << b[i] << endl;
+        cout << "b[" << i << "] = " << fixed << b[i] << endl;
 
-    cout << endl <<"A.n = " << A.n << endl;
+    cout << "\nA.n = " << A.n << endl;
     cout << "A.nz = " << A.nz << endl;
 
-    cout << endl << "regularni matice tuhosti A:" << endl;
+    cout << "\nmatice tuhosti A:" << endl;
     for(i = 0; i < A.n; i++){
         for(int j = A.PI[i]; j < A.PI[i + 1]; j++){
-            cout << i << " " << A.J[j] << " " << A.VAL[j] << endl;
+            cout << i << " " << A.J_VAL[j].first << " " << A.J_VAL[j].second << endl;
         }
     }
 
-    cout << endl << "reziduum GaussSeidel:" << endl;
+    cout << "\nreziduum GaussSeidel:" << endl;
 #endif // DEBUG
 
-    A.GaussSeidel(b, u, 1000, 1e-10);
+    A.GaussSeidel(b, u, 1e5, 1e-10);
 
 #ifdef DEBUG
-    cout << endl << "vysledny vektor u:" << endl;
-    for(int i = 0; i < A.n; i++){
-        cout << fixed;
-        cout << u[i] << endl;
+    cout << "\nvysledny vektor u:" << endl;
+    for(i = 0; i < A.n; i++){
+        cout << fixed << u[i] << endl;
     }
 #endif // DEBUG
 
-    ofstream vystup("poisson2D.txt");
-    copy(u.begin(), u.end(), ostream_iterator<double>(vystup, "\n"));
-    vystup.close();
+    sit.VectorData(u);
+
+    sit.VectorSave(u, "poisson2D.txt");
 
     return 0;
 }

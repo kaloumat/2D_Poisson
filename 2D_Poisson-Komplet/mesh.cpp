@@ -1,12 +1,17 @@
 #define DEBUG
 #include <iostream>
-#include <string.h>
+#include <iterator>
+#include <fstream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
+#include <string.h>  // vymenit
 #include "mesh.h"
 
+using namespace std;
+
 /* ----------------------------- Mesh ------------------------------------------------ */
-void Mesh::Load(const std::string& filename){
+void Mesh::Load(const string& filename){
     Mesh grid;
     grid.Read(filename);
 
@@ -28,9 +33,9 @@ void Mesh::Load(const std::string& filename){
     isDirichlet.resize(nbNods);
 
 #ifdef DEBUG
-    std::cout << "pocet uzlu = " << nbNods << std::endl;
-    std::cout << "pocet usecek = " << nbBndrEdges << std::endl;
-    std::cout << "pocet trojuhelniku = " << nbTriangles << std::endl;
+    cout << "pocet uzlu = " << nbNods << endl;
+    cout << "pocet usecek = " << nbBndrEdges << endl;
+    cout << "pocet trojuhelniku = " << nbTriangles << endl;
 #endif // DEBUG
 
     int      i, nbGeomElements, idx;
@@ -41,7 +46,7 @@ void Mesh::Load(const std::string& filename){
 
     fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
-        std::cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << std::endl;
+        cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << endl;
         exit(1);
     }
     while (!feof(fid)){
@@ -78,7 +83,7 @@ void Mesh::Load(const std::string& filename){
                     i2++;
                     break;
                 default:
-                    std::cout << std::endl << std::endl << "Error[MSH]: Unknown element " << i + 1  << ", type " << current.etyp << std::endl;
+                    cout << "\nError[Mesh]: Neznamy element " << i + 1 << ", typ " << current.etyp << endl;
                     exit(1);
                     break;
                 }
@@ -89,7 +94,7 @@ void Mesh::Load(const std::string& filename){
     fclose(fid);
 }
 /* ----------------------------------------------------------------------------------- */
-void Mesh::Read(const std::string& filename){
+void Mesh::Read(const string& filename){
     int      i, nbGeomElements;
     FILE     *fid;
     char     radek[500];
@@ -101,7 +106,7 @@ void Mesh::Read(const std::string& filename){
 
     fid = fopen(filename.c_str(), "r");
     if (fid == NULL){
-        std::cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << std::endl;
+        cout << "Error, nepodarilo se otevrit soubor ve formatu .MSH" << endl;
         exit(1);
     }
     while (!feof(fid)){
@@ -117,10 +122,14 @@ void Mesh::Read(const std::string& filename){
                 fgets(radek, sizeof(radek), fid);
                 current.Read(radek);
                 switch (current.etyp){
-                case GMSH_SEGMENT:     nbBndrEdges++; break;
-                case GMSH_TRIANGLE:    nbTriangles++; break;
+                case GMSH_SEGMENT:
+                    nbBndrEdges++;
+                    break;
+                case GMSH_TRIANGLE:
+                    nbTriangles++;
+                    break;
                 default:
-                    std::cout << std::endl << std::endl << "Error[MSH]: Neznamy element " << i + 1 << ", type " << current.etyp << "!" << std::endl;
+                    cout << "\nError[Mesh]: Neznamy element " << i + 1 << ", typ " << current.etyp << endl;
                     exit(1);
                     break;
                 }
@@ -128,6 +137,62 @@ void Mesh::Read(const std::string& filename){
         }
     }
     fclose(fid);
+}
+/* ----------------------------------------------------------------------------------- */
+void Mesh::VectorSave(vector<double>& u, const string& filename){
+    ofstream vystup(filename);
+    vystup << fixed;
+    copy(u.begin(), u.end(), ostream_iterator<double>(vystup, "\n"));
+    vystup.close();
+}
+/* ----------------------------------------------------------------------------------- */
+void Mesh::VectorData(vector<double>& u){
+    int i;
+
+    struct Data{
+        double Ydata;
+        double Udata;
+    };
+
+    vector<Data> DataX0_2;
+    for(i = 0; i < nbNods; i++){
+        if(x[i] == 0.2){
+            DataX0_2.push_back({y[i], u[i]});
+        }
+    }
+
+    vector<Data> DataX0_5;
+    for(i = 0; i < nbNods; i++){
+        if(x[i] == 0.5){
+            DataX0_5.push_back({y[i], u[i]});
+        }
+    }
+
+    vector<Data> DataX0_9;
+    for(i = 0; i < nbNods; i++){
+        if(x[i] == 0.9){
+            DataX0_9.push_back({y[i], u[i]});
+        }
+    }
+
+    sort(DataX0_2.begin(), DataX0_2.end(), [](const auto& j, const auto& k) { return j.Ydata < k.Ydata; });
+    sort(DataX0_5.begin(), DataX0_5.end(), [](const auto& j, const auto& k) { return j.Ydata < k.Ydata; });
+    sort(DataX0_9.begin(), DataX0_9.end(), [](const auto& j, const auto& k) { return j.Ydata < k.Ydata; });
+
+    ofstream vystupX0_2("X0_2.txt");
+    for(size_t i = 0; i < DataX0_2.size(); i++)
+        vystupX0_2 << fixed << DataX0_2[i].Ydata << " " << DataX0_2[i].Udata << endl;
+    vystupX0_2.close();
+
+    ofstream vystupX0_5("X0_5.txt");
+    for(size_t i = 0; i < DataX0_5.size(); i++)
+        vystupX0_5 << fixed << DataX0_5[i].Ydata << " " << DataX0_5[i].Udata << endl;
+    vystupX0_5.close();
+
+    ofstream vystupX0_9("X0_9.txt");
+    for(size_t i = 0; i < DataX0_9.size(); i++)
+        vystupX0_9 << fixed << DataX0_9[i].Ydata << " " << DataX0_9[i].Udata << endl;
+    vystupX0_9.close();
 }
 
 
@@ -178,21 +243,19 @@ void element::GetElement(int i, Mesh *ptr){
 /* ----------------------------------------------------------------------------------- */
 void element::Info(int i, Mesh *ptr){
     GetElement(i, ptr);
-    std::cout << std::endl << "trojuhelnik:" << std::endl;
-    std::cout << "typ elementu: " << typ << std::endl;
-    std::cout << "index elementu: " << idx << std::endl;
-    std::cout << "oznaceni: " << mark << std::endl;
-    std::cout << "indexy uzlu: " << "A = " << idxA << ", B = " << idxB << ", C = " << idxC << std::endl;
-    std::cout << "indexy uzlu v ramci Dirichleta: " << "A = " << idxBaseFn[0] << ", B = " << idxBaseFn[1] << ", C = " << idxBaseFn[2] << std::endl;
-    std::cout << "souradnice vrcholu: " << "A[" << A[0] << ", " << A[1] << "], B[" << B[0] << ", " << B[1] << "], C[" << C[0] << ", " << C[1] << "]" << std::endl;
-    std::cout << "souradnice stredu: " << "Sa[" << Sa[0] << ", " << Sa[1] << "], Sb[" << Sb[0] << ", " << Sb[1] << "], Sc[" << Sc[0] << ", " << Sc[1] << "]" << std::endl;
-    std::cout << "souradnice teziste: " << "T[" << T[0] << ", " << T[1] << "]" << std::endl;
-    std::cout << "transformacni matice: " << "[" << matB[0][0] << " " << matB[0][1] << "]" << std::endl;
-    std::cout << "transformacni matice: " << "[" << matB[1][0] << " " << matB[1][1] << "]" << std::endl;
-    std::cout << "inverzni matice: " << "[" << invB[0][0] << " " << invB[0][1] << "]" << std::endl;
-    std::cout << "inverzni matice: " << "[" << invB[1][0] << " " << invB[1][1] << "]" << std::endl;
-    std::cout << "determinant matice: " << detB << std::endl;
-    std::cout << "obsah elementu: " << vol << std::endl;
+    cout << "\ntrojuhelnik "<< idx << ": " << endl;
+    cout << "oznaceni: " << mark << endl;
+    cout << "indexy uzlu: A = " << idxA << ", B = " << idxB << ", C = " << idxC << endl;
+    cout << "indexy uzlu v ramci Dirichleta: A = " << idxBaseFn[0] << ", B = " << idxBaseFn[1] << ", C = " << idxBaseFn[2] << endl;
+    cout << "souradnice vrcholu: A[" << A[0] << ", " << A[1] << "], B[" << B[0] << ", " << B[1] << "], C[" << C[0] << ", " << C[1] << "]" << endl;
+    cout << "souradnice stredu: Sa[" << Sa[0] << ", " << Sa[1] << "], Sb[" << Sb[0] << ", " << Sb[1] << "], Sc[" << Sc[0] << ", " << Sc[1] << "]" << endl;
+    cout << "souradnice teziste: T[" << T[0] << ", " << T[1] << "]" << endl;
+    cout << "transformacni matice: [" << matB[0][0] << " " << matB[0][1] << "]" << endl;
+    cout << "transformacni matice: [" << matB[1][0] << " " << matB[1][1] << "]" << endl;
+    cout << "inverzni matice: [" << invB[0][0] << ", " << invB[0][1] << "]" << endl;
+    cout << "inverzni matice: [" << invB[1][0] << ", " << invB[1][1] << "]" << endl;
+    cout << "determinant transformacni matice: " << detB << endl;
+    cout << "obsah trojuhelniku: " << vol << endl;
 }
 
 
@@ -231,7 +294,7 @@ quadrature::quadrature(){
 
 
 /* ----------------------------- gmshline -------------------------------------------- */
-int gmshline::Read(const std::string& radek){
+int gmshline::Read(const string& radek){
     int idx, etp, tgs, tgs1; //index //typ elementu //pocet oznaceni v gmsh
     int val;
     int tags[10], pom[10];
@@ -239,7 +302,7 @@ int gmshline::Read(const std::string& radek){
 
     nred = sscanf(radek.c_str(), "%d %d %d", &idx, &etp, &tgs);
     if (nred != 3){
-        std::cout << "Error[MSH]: GMSH format je spatne, nebo spatny radek" << std::endl;
+        cout << "Error[Mesh]: GMSH format je spatne, nebo spatny radek" << endl;
         exit(1);
     }
     etyp = etp;
@@ -256,7 +319,7 @@ int gmshline::Read(const std::string& radek){
         nred = sscanf(radek.c_str(), "%d %d %d %d %d %d %d %d", &idx, &etp, &tgs1, &tags[0], &tags[1], &pom[0], &pom[1], &pom[2]);
         break;
     default:
-        std::cout << "Error[MSH]: Incorrect number of tags (NTAGS " << tgs << ")" << std::endl;
+        cout << "Error[Mesh]: Spatny pocet tagu: " << tgs << endl;
         break;
     }
 
@@ -264,13 +327,13 @@ int gmshline::Read(const std::string& radek){
     switch (etp){
     case GMSH_SEGMENT:
         if (nred != tgs + 3 + 2)
-            std::cout << "Error[MSH]: Spatny format site pro usecky" << std::endl;
+            cout << "Error[Mesh]: Spatny format site pro usecky" << endl;
         ilist[0] = pom[0] - 1;
         ilist[1] = pom[1] - 1;
         break;
     case GMSH_TRIANGLE:
         if (nred != tgs + 3 + 3)
-            std::cout << "Error[MSH]: Spatny format site pro trojuhelniky" << std::endl;
+            cout << "Error[Mesh]: Spatny format site pro trojuhelniky" << endl;
         ilist[0] = pom[0] - 1;
         ilist[1] = pom[1] - 1;
         ilist[2] = pom[2] - 1;

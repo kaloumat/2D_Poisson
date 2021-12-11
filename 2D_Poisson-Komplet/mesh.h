@@ -25,6 +25,8 @@ public:
 
     void Load(const std::string& filename);
     void Read(const std::string& filename);
+    void VectorSave(std::vector<double>& u, const std::string& filename);
+    void VectorData(std::vector<double>& u);
 };
 
 class element{
